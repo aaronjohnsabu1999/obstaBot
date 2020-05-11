@@ -23,7 +23,7 @@ const pi = 3.141592653589793;
 var myGamePiece;
 var myObstacles = [];
 var myValues;
-
+var addedObsIter = 1;
 function startGame() {
     canvas = document.getElementById("gameCanvas")
     myGamePiece  = new component(10, 10, "blue", canvas.width/2, canvas.height/2, "circle");
@@ -355,24 +355,26 @@ shortcut.add("Backspace",function() {
     'type': 'keydown'
 });
 
-
-function removeArrElem(arr) {
-    var what, a = arguments, L = a.length, ax;
-    while (L > 1 && arr.length) {
-        what = a[--L];
-        while ((ax= arr.indexOf(what)) !== -1) {
-            arr.splice(ax, 1);
+// Adopted from https://stackoverflow.com/a/5767357/6539635
+function removeArrElem(arr, posX, posY) {
+    var i = 0;
+    while (i < arr.length) {
+        if(arr[i].posX === posX && arr[i].posY == posY && arr[i].text.includes("added")) {
+            arr.splice(i, 1);
+        } else {
+            ++i;
         }
     }
     return arr;
 }
-// console.log(myObstacles)
+
 function getMousePosition(canvas, event) { 
     let rect = canvas.getBoundingClientRect(); 
-    let x = event.clientX - rect.left; 
-    let y = event.clientY - rect.top; 
-    console.log(myObstacles)
-    
+    let x = event.clientX - rect.left - 10; 
+    let y = event.clientY - rect.top  - 10; 
+    x = x - x%10
+    y = y - y%10
+
     return [event.button, x, y];
 } 
       
@@ -385,22 +387,17 @@ canvasElem.addEventListener("mousedown", function(e) {
 }); 
 
 function obsPoint(action) {
-    console.log(action)
     button = action[0]
     posX   = action[1]
     posY   = action[2]
 
     if (button == 0) {
-        myObstacles.push(new component(10, 10, "black", posX, posY, "rectangle", "O1"));
-        console.log("Adding element")
+        myObstacles.push(new component(10, 10, "black", posX, posY, "rectangle", "addedObs"+addedObsIter));
+        addedObsIter += 1;
     }
     else if (button == 2) {
         for (i = 0; i < myObstacles.length; i += 1) {
-            if (myObstacles[i].text == "O1") {
-                removeArrElem(myObstacles[i], myObstacles)
-                console.log("Removing element")
-            }
-            console.log(myObstacles[i].text)
+            myObstacles = removeArrElem(myObstacles, posX, posY)
         }
     }
 }
