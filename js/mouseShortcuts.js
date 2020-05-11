@@ -48,6 +48,12 @@ canvasElem.addEventListener("mousedown", function(e) {
     
     if (action[0] == 1) {
         myObstacles = [];
+        
+        myObstacles.push(new component(canvas.width, 20,  "green", 0.0, 0.0, "rectangle"));
+        myObstacles.push(new component(20, canvas.height, "green", 0.0, 0.0, "rectangle"));
+        myObstacles.push(new component(canvas.width, 20,  "green", 0.0, canvas.height - 20, "rectangle"));
+        myObstacles.push(new component(20, canvas.height, "green", canvas.width - 20, 0.0,  "rectangle"));
+        
         myObstacles.push(new component(0.1*canvas.width + 10, 10, "red", 0.45*canvas.width, 0.55*canvas.height, "rectangle"));
         myObstacles.push(new component(10, 0.15*canvas.height, "red", 0.45*canvas.width, 0.4*canvas.height, "rectangle"));
         myObstacles.push(new component(10, 0.15*canvas.height, "red", 0.55*canvas.width, 0.4*canvas.height, "rectangle"));
