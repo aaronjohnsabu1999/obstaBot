@@ -7,7 +7,12 @@ var addedObsIter = 1;
 function startGame() {
     canvas = document.getElementById("gameCanvas")
     myGamePiece  = new component(10, 10, "blue", canvas.width/2, canvas.height/2, "circle_fill");
-    myValues     = new component("20px", "Consolas", "black", canvas.width/2 - 250, canvas.height-10, "text");
+    myValues     = new component("20px", "Consolas", "black", canvas.width/2 - 250, canvas.height-30, "text");
+    myObstacles.push(new component(canvas.width, 20,  "green", 0.0, 0.0, "rectangle"));
+    myObstacles.push(new component(20, canvas.height, "green", 0.0, 0.0, "rectangle"));
+    myObstacles.push(new component(canvas.width, 20,  "green", 0.0, canvas.height - 20, "rectangle"));
+    myObstacles.push(new component(20, canvas.height, "green", canvas.width - 20, 0.0,  "rectangle"));
+
     myObstacles.push(new component(0.1*canvas.width + 10, 10, "red", 0.45*canvas.width, 0.55*canvas.height, "rectangle"));
     myObstacles.push(new component(10, 0.15*canvas.height, "red", 0.45*canvas.width, 0.4*canvas.height, "rectangle"));
     myObstacles.push(new component(10, 0.15*canvas.height, "red", 0.55*canvas.width, 0.4*canvas.height, "rectangle"));
@@ -19,7 +24,7 @@ var myGameArea = {
     title  : document.getElementById("title"),
     canvas : document.getElementById("gameCanvas"),
     start  : function() {
-        this.canvas.style    = "border:10px solid green;"
+        this.canvas.style    = "border:0px solid green;"
         this.context         = this.canvas.getContext("2d");
         this.frameNo         = 0;
         this.interval        = setInterval(updateGameArea, 10);

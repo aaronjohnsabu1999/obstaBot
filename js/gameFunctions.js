@@ -26,21 +26,18 @@ function updateGameArea() {
                 }
             }
             else {
-                if (l && t) {
-                    myGamePiece.velX =   myGamePiece.velX;
-                    myGamePiece.velY = - myGamePiece.velY;
-                }
-                else if (l && b) {
-                    myGamePiece.velX =   myGamePiece.velX;
-                    myGamePiece.velY = - myGamePiece.velY;
-                }
-                else if (r && t) {
-                    myGamePiece.velX =   myGamePiece.velX;
-                    myGamePiece.velY = - myGamePiece.velY;
-                }
-                else if (r && b) {
-                    myGamePiece.velX =   myGamePiece.velX;
-                    myGamePiece.velY = - myGamePiece.velY;
+                oldVelX = myGamePiece.velX
+                oldVelY = myGamePiece.velY
+                k1 = (myGamePiece.posY - myObstacles[i].posY) / (myGamePiece.posX - myObstacles[i].posX)
+                k2 = Math.pow(k1, 2)
+
+                myGamePiece.velX = ( (k2 - 1)*oldVelX - 2*k1*oldVelY)/(k2 + 1);
+                myGamePiece.velY = (-(k2 - 1)*oldVelY - 2*k1*oldVelX)/(k2 + 1);
+
+                // Failsafe - Not completely functional though it helps in a way
+                if (Math.sqrt(Math.pow(myGamePiece.velX - oldVelY, 2) + Math.pow(myGamePiece.velY - oldVelX, 2)) < 0.05) {
+                    myGamePiece.posX -= myGamePiece.vXLim;
+                    myGamePiece.posY -= myGamePiece.vYLim;
                 }
             }
 

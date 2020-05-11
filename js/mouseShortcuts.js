@@ -3,19 +3,17 @@ function removeArrElem(arr, posX, posY) {
     var i = 0;
     while (i < arr.length) {
         if (arr[i].text) {
-            if (arr[i].text.includes("added")) {
-                if(arr[i].type == "rectangle" && arr[i].posX == posX && arr[i].posY == posY) {
-                    arr.splice(i, 1);
-                    continue
-                }
-                else if((arr[i].type == "circle_empty" || arr[i].type == "circle_fill") && Math.abs(Math.sqrt(Math.pow(arr[i].posX - posX, 2) + Math.pow(arr[i].posY - posY, 2)) - arr[i].width) < 10) {
-                    arr.splice(i, 1);
-                    continue
-                } 
-                else if(arr[i].type == "line" && Math.min(arr[i].posX, arr[i].width) <= posX && Math.max(arr[i].posX, arr[i].width) >= posX && Math.min(arr[i].posY, arr[i].height) <= posY && Math.max(arr[i].posY, arr[i].height) >= posY) {
-                    arr.splice(i, 1);
-                    continue
-                }
+            if(arr[i].type == "rectangle" && arr[i].posX == posX && arr[i].posY == posY) {
+                arr.splice(i, 1);
+                continue
+            }
+            else if((arr[i].type == "circle_empty" || arr[i].type == "circle_fill") && Math.abs(Math.sqrt(Math.pow(arr[i].posX - posX, 2) + Math.pow(arr[i].posY - posY, 2)) - arr[i].width) < 10) {
+                arr.splice(i, 1);
+                continue
+            } 
+            else if(arr[i].type == "line" && Math.min(arr[i].posX, arr[i].width) <= posX && Math.max(arr[i].posX, arr[i].width) >= posX && Math.min(arr[i].posY, arr[i].height) <= posY && Math.max(arr[i].posY, arr[i].height) >= posY) {
+                arr.splice(i, 1);
+                continue
             }
         }
         ++i;
