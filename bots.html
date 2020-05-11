@@ -1,0 +1,409 @@
+<!--
+    Basic code for HTML game derived from https://www.w3schools.com/graphics/tryit.asp?filename=trygame_default_gravity
+    -->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+    <center><h1 id="title"> The Obstacle Clearance Bot </h1></center>
+    <hr>
+    <center><canvas id="gameCanvas" width=1600, height=800 align="center"> </canvas></center>
+<script type="text/javascript" src="js/shortcut.js"></script>
+<script>
+const pi = 3.141592653589793;
+var myGamePiece;
+var myObstacles = [];
+var myValues;
+
+function startGame() {
+    canvas = document.getElementById("gameCanvas")
+    myGamePiece  = new component(10, 10, "blue", canvas.width/2, canvas.height/2, "circle");
+    myValues     = new component("20px", "Consolas", "black", canvas.width/2 - 250, canvas.height-10, "text");
+    myObstacles.push(new component(0.1*canvas.width + 10, 10, "red", 0.45*canvas.width, 0.55*canvas.height, "rectangle"));
+    myObstacles.push(new component(10, 0.15*canvas.height, "red", 0.45*canvas.width, 0.4*canvas.height, "rectangle"));
+    myObstacles.push(new component(10, 0.15*canvas.height, "red", 0.55*canvas.width, 0.4*canvas.height, "rectangle"));
+    
+    myGameArea.start();
+}
+
+var myGameArea = {
+    title  : document.getElementById("title"),
+    canvas : document.getElementById("gameCanvas"),
+    start  : function() {
+        this.canvas.style    = "border:10px solid green;"
+        this.context         = this.canvas.getContext("2d");
+        this.frameNo         = 0;
+        this.interval        = setInterval(updateGameArea, 10);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function component(width, height, color, posX, posY, type, text) {
+    this.type     = type;
+    this.width    = width;
+    this.height   = height;
+    this.posX     = posX;
+    this.posY     = posY;
+    this.velX     = 0;
+    this.velY     = 0;    
+    this.accX     = 0;
+    this.accY     = 0;
+    this.vXLim    = 0.5;
+    this.vYLim    = 0.5;
+    this.text     = text;
+    
+    this.update   = function() {
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.posX, this.posY);
+        }
+        else if (this.type == "rectangle") {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.posX, this.posY, this.width, this.height);
+        }
+        else if (this.type == "circle") {
+            ctx.beginPath();
+            ctx.arc(this.posX, this.posY, this.width, 0.0*Math.PI, 2.0*Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+    }
+    
+    this.newPos   = function() {
+        this.velX += this.accX;
+        this.velY += this.accY;
+        this.velLimit();
+        this.posX += this.velX;
+        this.posY += this.velY;
+        this.hitEdge();
+    }
+
+    this.velLimit = function() {
+        if (this.velX > this.vXLim) {
+            this.velX = this.vXLim;
+            this.accX = 0;
+        }
+        else if (this.velX < - this.vXLim) {
+            this.velX = - this.vXLim;
+            this.accX = 0;
+        }
+        if (this.velY > this.vYLim) {
+            this.velY = this.vYLim;
+            this.accY = 0;
+        }
+        else if (this.velY < - this.vYLim) {
+            this.velY = - this.vYLim;
+            this.accY = 0;
+        }
+    }   
+    
+    this.hitEdge  = function() {
+        if (this.type == "rectangle") {
+            var XLeft   = 0;
+            var XRight  = myGameArea.canvas.width  - this.width;
+            var XTop    = 0;
+            var XBottom = myGameArea.canvas.height - this.height;
+        }
+        else if (this.type == "circle") {
+            var XLeft   = this.width;
+            var XRight  = myGameArea.canvas.width  - this.width;
+            var XTop    = this.width;
+            var XBottom = myGameArea.canvas.height - this.width;
+        }
+        
+        if (this.posX < XLeft) {
+            this.posX = XLeft;
+            this.velX = 0;
+        }
+        else if (this.posX > XRight) {
+            this.posX = XRight;
+            this.velX = 0;
+        }
+        if (this.posY < XTop) {
+            this.posY = XTop;
+            this.velY = 0;
+        }
+        else if (this.posY > XBottom) {
+            this.posY = XBottom;
+            this.velY = 0;
+        }
+    }
+    
+    this.crashWith = function(otherobj) {
+        if (this.type == "rectangle") {
+            var myleft      = this.posX;
+            var myright     = this.posX + (this.width);
+            var mytop       = this.posY;
+            var mybottom    = this.posY + (this.height);
+        }
+        else if (this.type == "circle") {
+            var myleft      = this.posX - (this.width);
+            var myright     = this.posX + (this.width);
+            var mytop       = this.posY - (this.width);
+            var mybottom    = this.posY + (this.width);
+        }
+        
+        
+        var otherleft   = otherobj.posX;
+        var otherright  = otherobj.posX + (otherobj.width);
+        var othertop    = otherobj.posY;
+        var otherbottom = otherobj.posY + (otherobj.height);
+        var obsDir      = " ";
+        var crash = true;
+        
+        t1 = (mytop    > otherbottom)
+        l1 = (myleft   > otherright)
+        b1 = (mybottom < othertop)
+        r1 = (myright  < otherleft)
+        t2 = (mytop    + this.height/3 >= otherbottom)
+        l2 = (myleft   + this.width /3 >= otherright)
+        b2 = (mybottom - this.height/3 <= othertop)
+        r2 = (myright  - this.width /3 <= otherleft)
+        
+        if (t1 || r1 || b1 || l1)
+            crash = false;
+        
+        return [crash, t2, l2, b2, r2];
+    }
+}
+
+function updateGameArea() {
+    var posX, height, gap, minHeight, maxHeight, minGap, maxGap;
+    canvasWidth  = document.getElementById("gameCanvas").width
+    canvasHeight = document.getElementById("gameCanvas").height
+    
+    for (i = 0; i < myObstacles.length; i += 1) {
+        if (myGamePiece.crashWith(myObstacles[i])[0]) {
+            t = myGamePiece.crashWith(myObstacles[i])[1]
+            l = myGamePiece.crashWith(myObstacles[i])[2]
+            b = myGamePiece.crashWith(myObstacles[i])[3]
+            r = myGamePiece.crashWith(myObstacles[i])[4]
+                    
+            if ((!t && b) || (t && !b)) {
+                myGamePiece.velY = - myGamePiece.velY;
+            }
+            else {
+                myGamePiece.velY =   myGamePiece.velY;
+            }
+                
+            if ((!l && r) || (l && !r)) {
+                myGamePiece.velX = - myGamePiece.velX;
+            }
+            else {
+                myGamePiece.velX =   myGamePiece.velX;
+            }
+            
+            myGamePiece.accX = 0;
+            myGamePiece.accY = 0;
+        } 
+    }
+    
+    myGameArea.clear();
+    myGameArea.frameNo += 1;
+    for (i = 0; i < myObstacles.length; i += 1) {
+        myObstacles[i].update();
+    }
+    myValues.text = "Position : (" + Math.round(myGamePiece.posX) + "," + Math.round(myGamePiece.posY) + ")    Velocity : ("+ Math.round(myGamePiece.velX*100)/100 + "," + Math.round(myGamePiece.velY*100)/100 + ")    Velocity Limits : ("+ Math.round(myGamePiece.vXLim*100)/100 + "," + Math.round(myGamePiece.vYLim*100)/100 + ")";
+    myValues.update();
+    myGamePiece.newPos();
+    myGamePiece.update();
+}
+
+function everyinterval(n) {
+    if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+    return false;
+}
+
+function accelerate(n) {
+    myGamePiece.accY = n;
+}
+
+shortcut.add("W",function() {
+    myGamePiece.accY = -0.05;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("W",function() {
+    myGamePiece.accY = 0.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("S",function() {
+    myGamePiece.accY =  0.05;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("S",function() {
+    myGamePiece.accY = 0.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("A",function() {
+    myGamePiece.accX = -0.05;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("A",function() {
+    myGamePiece.accX = 0.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("D",function() {
+    myGamePiece.accX = 0.05;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("D",function() {
+    myGamePiece.accX = 0.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("Up",function() {
+    myGamePiece.vYLim *= 1.10;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("Up",function() {
+    myGamePiece.vYLim *= 1.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("Down",function() {
+    myGamePiece.vYLim /= 1.10;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("Down",function() {
+    myGamePiece.vYLim /= 1.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("Left",function() {
+    myGamePiece.vXLim /= 1.10;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("Left",function() {
+    myGamePiece.vXLim /= 1.00;
+},{
+    'type': 'keyup'
+});
+
+shortcut.add("Right",function() {
+    myGamePiece.vXLim *= 1.10;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("Right",function() {
+    myGamePiece.vXLim *= 1.00;
+},{
+    'type': 'keyup'
+});
+
+
+shortcut.add("Space",function() {
+    myGamePiece.velX = 0.00;
+    myGamePiece.velY = 0.00;
+    myGamePiece.accX = 0.00;
+    myGamePiece.accY = 0.00;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("Escape",function() {
+    myGamePiece.posX = document.getElementById("gameCanvas").width/2;
+    myGamePiece.posY = document.getElementById("gameCanvas").height/2;
+    myGamePiece.velX = 0.00;
+    myGamePiece.velY = 0.00;
+    myGamePiece.accX = 0.00;
+    myGamePiece.accY = 0.00;
+},{
+    'type': 'keydown'
+});
+
+shortcut.add("Backspace",function() {
+    myGamePiece.vXLim = 0.5;
+    myGamePiece.vYLim = 0.5;
+},{
+    'type': 'keydown'
+});
+
+
+function removeArrElem(arr) {
+    var what, a = arguments, L = a.length, ax;
+    while (L > 1 && arr.length) {
+        what = a[--L];
+        while ((ax= arr.indexOf(what)) !== -1) {
+            arr.splice(ax, 1);
+        }
+    }
+    return arr;
+}
+// console.log(myObstacles)
+function getMousePosition(canvas, event) { 
+    let rect = canvas.getBoundingClientRect(); 
+    let x = event.clientX - rect.left; 
+    let y = event.clientY - rect.top; 
+    console.log(myObstacles)
+    
+    return [event.button, x, y];
+} 
+      
+let canvasElem = document.getElementById("gameCanvas"); 
+canvasElem.oncontextmenu = () => false;
+
+canvasElem.addEventListener("mousedown", function(e) { 
+    obsPoint(getMousePosition(canvasElem, e));
+    
+}); 
+
+function obsPoint(action) {
+    console.log(action)
+    button = action[0]
+    posX   = action[1]
+    posY   = action[2]
+
+    if (button == 0) {
+        myObstacles.push(new component(10, 10, "black", posX, posY, "rectangle", "O1"));
+        console.log("Adding element")
+    }
+    else if (button == 2) {
+        for (i = 0; i < myObstacles.length; i += 1) {
+            if (myObstacles[i].text == "O1") {
+                removeArrElem(myObstacles[i], myObstacles)
+                console.log("Removing element")
+            }
+            console.log(myObstacles[i].text)
+        }
+    }
+}
+</script>
+</body>
+</html>
