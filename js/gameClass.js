@@ -1,13 +1,20 @@
-const pi = 3.141592653589793;
+const pi   = 3.141592653589793;
+var canvas = document.getElementById("gameCanvas")
+
 var myGamePiece;
-var myObstacles = [];
 var myValues;
+var myPath       = [];
+var myObstacles  = [];
 var addedObsIter = 1;
 
+var scale          = 1
+var areaMap        = [];
+areaMap.length     = (canvas.width / scale) * (canvas.height / scale);
+intMAX             = areaMap.length*2
+
 function startGame() {
-    canvas = document.getElementById("gameCanvas")
-    myGamePiece  = new component(10, 10, "blue", canvas.width/2, canvas.height/2, "circle_fill");
-    myValues     = new component("20px", "Consolas", "black", canvas.width/2 - 250, canvas.height-30, "text");
+    myGamePiece    = new component(4, 4, "blue", canvas.width/2, canvas.height/2, "circle_fill");
+    myValues       = new component("20px", "Consolas", "black", canvas.width/2 - 250, canvas.height-30, "text");
     myObstacles.push(new component(canvas.width, 20,  "green", 0.0, 0.0, "rectangle"));
     myObstacles.push(new component(20, canvas.height, "green", 0.0, 0.0, "rectangle"));
     myObstacles.push(new component(canvas.width, 20,  "green", 0.0, canvas.height - 20, "rectangle"));

@@ -1,7 +1,7 @@
 function updateGameArea() {
     var posX, height, gap, minHeight, maxHeight, minGap, maxGap;
-    canvasWidth  = document.getElementById("gameCanvas").width
-    canvasHeight = document.getElementById("gameCanvas").height
+    // canvasWidth  = canvas.width
+    // canvasHeight = canvas.height
     
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])[0]) {
@@ -51,10 +51,22 @@ function updateGameArea() {
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].update();
     }
+    for (i = 0; i < myPath.length; i += 1) {
+        myPath[i].update();
+    }
     myValues.text = "Position : (" + Math.round(myGamePiece.posX) + "," + Math.round(myGamePiece.posY) + ")    Velocity : ("+ Math.round(myGamePiece.velX*100)/100 + "," + Math.round(myGamePiece.velY*100)/100 + ")    Velocity Limits : ("+ Math.round(myGamePiece.vXLim*100)/100 + "," + Math.round(myGamePiece.vYLim*100)/100 + ")";
     myValues.update();
     myGamePiece.newPos();
     myGamePiece.update();
+    
+    // ctx    = canvas.getContext("2d")
+    // ctx.font   = "5px Arial"
+    // for (i = 0; i < areaMap.length; i += 1) {
+    //     if (areaMap[i] < intMAX) {
+    //         ctx.fillText(areaMap[i], i%canvas.width, Math.floor(i/canvas.width))
+    //         console.log("Filling " + areaMap[i] + " at ("+ i%canvas.width + ", " + Math.floor(i/canvas.width) + ")")
+    //     }
+    // }
 }
 
 function everyinterval(n) {

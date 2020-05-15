@@ -6,3 +6,149 @@ canvas {
 img {
     border-radius: 15%;
 }
+
+/* Buttons styles */
+input::-moz-focus-inner,
+button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+input[type="submit"].btn,
+button.btn {
+    cursor: pointer;
+}
+
+/* Progress bar incorporated from https://www.w3schools.com/howto/howto_js_progressbar.asp */
+#myProgress {
+  width: 100%;
+  background-color: #ddd;
+}
+
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: #4CAF50;
+}
+
+a.btn,.btn {
+  margin-right: 1em; /* remove this while use
+  margin-bottom: 1em; /* remove this while use*/
+    display: inline-block;
+    outline: none;
+    *zoom: 1;
+    text-align: center;
+    text-decoration: none;
+    font-family: inherit;
+    font-weight: 300;
+    letter-spacing: 1px;
+    vertical-align: middle;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.01);
+}
+/* Radius */
+.btn-radius {
+  border-radius: 3px;
+}
+/* Sizes */
+.btn-small {
+    font-size: 0.8125em;
+    padding: 0.4125em 1.25em;
+}
+.btn-medium {
+    font-size: 0.9375em;
+    padding: 0.5375em 1.375em;
+}
+.btn-large {
+    font-size: 4em;
+    padding: 1.5em 1.5em;
+}
+
+/* Colors */
+.btn-green {
+    color: #3CB371;
+    border-color: #3CB371;
+}
+.btn-green:hover {
+  color: #FFFFFF;
+  background: #3CB371;
+  border-color: #3CB371;        
+}
+.btn-green-selected {
+    color: #3CB371;
+    border-color: #000000;
+}
+.btn-green-selected:hover {
+  color: #FFFFFF;
+  background: #3CB371;
+  border-color: #000000;        
+}
+
+.btn-blue {
+    color: #4682B4;
+    border-color: #4682B4;
+}
+.btn-blue:hover {
+  background: #4682B4;
+  color: #FFFFFF;
+  border-color: #4682B4;        
+}
+.btn-blue-selected {
+    color: #4682B4;
+    border-color: #000000;
+}
+.btn-blue-selected:hover {
+  background: #4682B4;
+  color: #FFFFFF;
+  border-color: #000000;        
+}
+
+.btn-orange {
+    color: #FF8C00;
+    border-color: #FF8C00;
+}
+.btn-orange:hover {
+  background: #FF8C00;
+  color: #FFFFFF;
+  border-color: #FF8C00;        
+}
+.btn-orange-selected {
+    color: #FF8C00;
+    border-color: #000000;
+}
+.btn-orange-selected:hover {
+  background: #FF8C00;
+  color: #FFFFFF;
+  border-color: #000000;    
+}
+
+.btn-red {
+    color: #B22222;
+    border-color: #B22222;
+}
+.btn-red:hover {
+  background: #B22222;
+  color: #FFFFFF;
+  border-color: #B22222;    
+}
+.btn-red-selected {
+    color: #B22222;
+    border-color: #000000;
+}
+.btn-red-selected:hover {
+  background: #B22222;
+  color: #FFFFFF;
+  border-color: #000000;    
+}
+
+.btn-gray {
+    color: #808080;
+    border-color: #808080;
+}
+.btn-gray:hover {
+  background: #808080;
+  color: #FFFFFF;
+  border-color: #808080;    
+}

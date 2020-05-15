@@ -121,3 +121,15 @@ shortcut.add("Backspace",function() {
 },{
     'type': 'keydown'
 });
+
+// shortcut.add("P",function() {
+//     worker = new Worker('pathPlan.js')        
+// },{
+//     'type': 'keydown'
+// });
+
+// shortcut.add("P",function() {
+//     return
+// },{
+//     'type': 'keyup'
+// });
